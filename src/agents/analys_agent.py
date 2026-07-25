@@ -6,6 +6,7 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import chromadb
 from chromadb.utils import embedding_functions 
+import search_agent
 
 def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):
     if not pdf_url:
@@ -103,3 +104,9 @@ def analysis_agent(papers, topic):
         
     print(f"\n {stored_count} papers stored in the vector database.")
 
+# Test the analysis agent
+topic = "cross-generator generalization AI-Generated text detection"
+papers = search_agent(topic, max_results_per_query=5, display_results=True)
+analysis_agent(papers, topic)
+for p in papers[:5]:
+    print(p["title"], "-> abstract length:", len(p.get("abstract", "")))
