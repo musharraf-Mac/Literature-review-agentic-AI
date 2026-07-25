@@ -57,3 +57,9 @@ def is_relevant(abstract, topic):
     print("Raw response:", repr(response.content))
     return "yes" in response.content.lower().strip()
 
+# Chunk test
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+def chunk_text(text, chunk_size=1000, chunk_overlap=200):
+    splitter = RecursiveCharacterTextSplitter(chunk_size = chunk_size, chunk_overlap=chunk_overlap)
+    return splitter.split_text(text)
