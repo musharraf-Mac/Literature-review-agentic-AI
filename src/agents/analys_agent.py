@@ -78,5 +78,28 @@ def store_chunks(chunks, paper_meta, chunk_id_prefix):
     metadatas = [{"title": paper_meta["title"], "source": paper_meta["source"]} for _ in chunks]
     collection.add(documents=chunks, ids=ids, metadatas=metadatas)
     
-
+# Analysis agent
+def analysis_agent(papers, topic):
+    stored_count=0
+    for idx, paper in enumerate(papers):
+        if not is_relevant(paper.get("Abstract"), topic):
+            print(f"Paper {idx+1} is not relevant. Skipping.")
+            continue
+        
+        filepath = download_pdf(paper.get("pdf_url"), filename=f"paper_{idx+1}.pdf")
+        if not filepath:
+            print(f"Skipped (no pdf): {paper.get('title')}")
+            continue
+        
+        text = extract_text(filepath)
+        if not text:
+            print(f"Skipped (no text): {paper.get('title')}")
+            continue
+        
+        chunks = chunk_text(text)
+        store_chunks(chunks, paper, chunk_id_prefix=f"paper_{idx}")
+        stored_count +=1
+        print(f"Stored: {paper['title']} ({len(chunks)} chunks)")
+        
+    print(f"\n {stored_count} papers stored in the vector database.")
 
