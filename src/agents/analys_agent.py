@@ -40,3 +40,20 @@ def extract_text(filepath):
     except Exception as e:
         print(f"Error extracting text from {filepath}: {e}")
         return ""
+    
+load_dotenv()
+GROQ_API = os.getenv("GROQ_API")
+llm_relevance = ChatGroq(model="openai/gpt-oss-20b", api_key=GROQ_API, temperature=0, max_tokens=1000)
+
+def is_relevant(abstract, topic):
+    if not abstract:
+        print("Empty abstract, skipping")
+        return False
+    prompt = f"""Topic: {topic}
+    Abstract: {abstract}
+    Is this paper relavant to the topic? Answer with 'Yes' or 'No' only.
+    """
+    response = llm_relevance.invoke(prompt)
+    print("Raw response:", repr(response.content))
+    return "yes" in response.content.lower().strip()
+
