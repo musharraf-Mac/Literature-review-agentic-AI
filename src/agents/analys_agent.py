@@ -8,7 +8,23 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..',"..")))
 from core.vector_store import collection
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from core.config import GROQ_API
+import tempfile
 
+def get_papers_dir():
+    try:
+        import streamlit as st
+        # Running on Streamlit Cloud (or any environment) — use a safe temp dir
+        return tempfile.mkdtemp(prefix="papers_")
+    except Exception:
+        # Local fallback — keep your normal data/papers folder for dev convenience
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(BASE_DIR, "..", "..", "data", "papers")
+        path = os.path.abspath(path)
+        os.makedirs(path, exist_ok=True)
+        return path
+    
+SAVE_DIR = get_papers_dir()
 
 # Download PDF and extract text
 def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):

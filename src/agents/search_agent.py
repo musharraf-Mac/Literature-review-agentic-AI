@@ -1,18 +1,11 @@
 import os
-import langchain_openrouter
-import langchain_groq
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_openrouter import ChatOpenRouter
 import requests
 import feedparser
 import time
-
-
-# Run API key from .env file
-load_dotenv()
-GROQ_API = os.getenv("GROQ_API")
-OPEN_ROUTER_API = os.getenv("OPEN_ROUTER_API")
+from core.config import GROQ_API, OPEN_ROUTER_API
 
 if not GROQ_API:
     raise ValueError("API keys for GROQ must be set in the .env file.")
