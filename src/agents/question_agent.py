@@ -82,3 +82,9 @@ def retrieval_agent(topic):
 
     return qa_pairs
 
+# Test
+qa_pairs = retrieval_agent("cross-generator generalization AI-generated text detection")
+for qa in qa_pairs:
+    print("\nQ:", qa["question"])
+    print("A:", qa["answer"][:300], "...")
+    print("Sources:", qa["sources"])
