@@ -8,4 +8,3 @@ embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(model_na
 
 collection = client.get_or_create_collection(name="literature_review", embedding_function=embedding_fn)
 
-    
