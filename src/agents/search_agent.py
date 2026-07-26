@@ -46,6 +46,11 @@ def generate_search_queries(topic, n=3):
             queries.append(q)
         return queries[:n] if queries else [topic]
     
+def get_arxiv_pdf_url(entry): # For getting a proper PDF URL from the arXiv entry
+    # entry.id looks like: http://arxiv.org/abs/2506.01923v1
+    arxiv_id = entry.id.split("/abs/")[-1]
+    return f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+    
 def search_arxiv(query, max_results=5):
     base_url = "http://export.arxiv.org/api/query"
     params = {
@@ -106,7 +111,7 @@ def search_agent(topic, max_results_per_query=5,display_results=True):
     all_results = []
     for q in queries:
         all_results.extend(search_arxiv(q, max_results_per_query))
-        all_results.extend(search_semantic_scholar(q, max_results_per_query))
+        # all_results.extend(search_semantic_scholar(q, max_results_per_query))
     
     seen = set()
     unique_results = []
