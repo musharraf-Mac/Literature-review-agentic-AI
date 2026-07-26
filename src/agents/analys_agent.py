@@ -99,7 +99,7 @@ def analysis_agent(papers, topic):
         stored_count += 1
         print(f"✓ Stored: {paper['title']} ({len(chunks)} chunks)")
 
-    print(f"\n✅ {stored_count} papers embedded into vector DB")
+    print(f"\n{stored_count} papers embedded into vector DB")
 
 # Test the analysis agent
 topic = "cross-generator generalization AI-Generated text detection"
