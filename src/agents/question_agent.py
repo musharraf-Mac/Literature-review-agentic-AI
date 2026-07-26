@@ -24,3 +24,11 @@ Topic: {topic}"""
             q = line.split(".", 1)[-1].strip()
             questions.append(q)
     return questions[:n] if questions else [topic]
+
+from core.vector_store import collection 
+
+def retrieve_chunks(question, n_results=4):
+    results = collection.query(query_texts=[question], n_results=n_results)
+    docs = results["documents"][0] if results["documents"] else []
+    metas = results["metadatas"][0] if results["metadatas"] else []
+    return list(zip(docs, metas))
