@@ -86,24 +86,22 @@ def analysis_agent(papers, topic):
     for idx, paper in enumerate(papers):
         filepath = download_pdf(paper.get("pdf_url"), filename=f"paper_{idx}.pdf")
         if not filepath:
-            print(f"✗ Skipped (no PDF): {paper['title']}")
+            print(f"Skipped (no PDF): {paper['title']}")
             continue
 
         text = extract_text(filepath)
         if not text:
-            print(f"✗ Skipped (no extractable text): {paper['title']}")
+            print(f"Skipped (no extractable text): {paper['title']}")
             continue
 
         chunks = chunk_text(text)
         store_chunks(chunks, paper, chunk_id_prefix=f"paper_{idx}")
         stored_count += 1
-        print(f"✓ Stored: {paper['title']} ({len(chunks)} chunks)")
+        print(f"Stored: {paper['title']} ({len(chunks)} chunks)")
 
     print(f"\n{stored_count} papers embedded into vector DB")
 
 # Test the analysis agent
 topic = "cross-generator generalization AI-Generated text detection"
-papers = search_agent(topic, max_results_per_query=5, display_results=True)
+papers = search_agent(topic, max_results_per_query=2, display_results=True)
 analysis_agent(papers, topic)
-for p in papers[:5]:
-    print(p["title"], "-> abstract length:", len(p.get("abstract", "")))
