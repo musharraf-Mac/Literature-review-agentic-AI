@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..',"..")))
 from core.vector_store import collection 
+from core.config import GROQ_API
 
 load_dotenv()
 llm_planner = ChatGroq(
-    api_key=os.getenv("GROQ_API"),
+    api_key=GROQ_API,
     model="openai/gpt-oss-120b",    
     temperature=0.3,
 )
@@ -35,7 +36,7 @@ def retrieve_chunks(question, n_results=4):
     return list(zip(docs, metas))
 
 # ReAct agent for answering questions
-llm_answerer = ChatGroq(api_key=os.getenv("GROQ_API"), model="openai/gpt-oss-120b", temperature=0)
+llm_answerer = ChatGroq(api_key=GROQ_API, model="openai/gpt-oss-120b", temperature=0)
 
 def answer_question(question, max_attempts=2):
     n_results = 4

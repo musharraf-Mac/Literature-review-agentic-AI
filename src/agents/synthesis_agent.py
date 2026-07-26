@@ -1,13 +1,11 @@
 from langchain_groq import ChatGroq
 from langchain_openrouter import ChatOpenRouter  # or however you imported it earlier
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from core.config import OPEN_ROUTER_API
 
 # Stronger model for final writing quality — via OpenRouter as planned
 llm_synth = ChatOpenRouter(
-    api_key=os.getenv("OPEN_ROUTER_API"),
+    api_key=OPEN_ROUTER_API,
     model="openai/gpt-4o-mini",  
     temperature=0.3,  # slightly higher than 0 — some writing variety, but still controlled
 )
@@ -49,6 +47,6 @@ Improved version:"""
 
 def synthesis_agent(topic, qa_pairs):
     draft = synthesize_review(topic, qa_pairs)
-    print("📝 Draft generated, running self-critique...")
+    print("Draft generated, running self-critique...")
     final = critique_review(draft, topic)
     return final
