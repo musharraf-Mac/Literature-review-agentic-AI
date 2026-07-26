@@ -1,11 +1,14 @@
 from langchain_groq import ChatGroq
 import os
 from dotenv import load_dotenv
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..',"..")))
+from core.vector_store import collection 
 
 load_dotenv()
 llm_planner = ChatGroq(
     api_key=os.getenv("GROQ_API"),
-    model="llama-3.3-70b-versatile",    
+    model="openai/gpt-oss-120b",    
     temperature=0.3,
 )
 print(f"Planner LLM loaded successfully : {llm_planner.model_name}")
@@ -25,8 +28,6 @@ Topic: {topic}"""
             questions.append(q)
     return questions[:n] if questions else [topic]
 
-from core.vector_store import collection 
-
 def retrieve_chunks(question, n_results=4):
     results = collection.query(query_texts=[question], n_results=n_results)
     docs = results["documents"][0] if results["documents"] else []
@@ -34,7 +35,7 @@ def retrieve_chunks(question, n_results=4):
     return list(zip(docs, metas))
 
 # ReAct agent for answering questions
-llm_answerer = ChatGroq(api_key=os.getenv("GROQ_APIKEY"), model="openai/gpt-oss-120b", temperature=0)
+llm_answerer = ChatGroq(api_key=os.getenv("GROQ_API"), model="openai/gpt-oss-120b", temperature=0)
 
 def answer_question(question, max_attempts=2):
     n_results = 4
