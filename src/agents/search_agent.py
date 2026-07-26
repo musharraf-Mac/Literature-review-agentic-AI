@@ -46,7 +46,12 @@ def generate_search_queries(topic, n=3):
             queries.append(q)
         return queries[:n] if queries else [topic]
     
-def search_arxiv(query, max_results=5):
+def get_arxiv_pdf_url(entry): # For getting a proper PDF URL from the arXiv entry
+    # entry.id looks like: http://arxiv.org/abs/2506.01923v1
+    arxiv_id = entry.id.split("/abs/")[-1]
+    return f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+    
+def search_arxiv(query, max_results=5, retries=3, timeout=20):
     base_url = "http://export.arxiv.org/api/query"
     params = {
         "search_query": f"all:{query}",
@@ -55,24 +60,29 @@ def search_arxiv(query, max_results=5):
         "sortBy": "relevance",
         "sortOrder": "descending"
     }
-    try:
-        response = requests.get(base_url, params=params, timeout=20)
-        feed = feedparser.parse(response.text)
-    except Exception as e:
-        print(f"arxiv search failed for query '{query}': {e}")
-        return []
-    
-    results = []
-    for entry in feed.entries:
-        result = {
-            "title": entry.title.replace('\n', ' ').strip(), # Remove newlines and extra spaces
-            "authors":[a.name for a in entry.authors],
-            "abstract": entry.summary.replace('\n', ' ').strip(), 
-            "pdf_url": entry.published,
-            "source": "arxiv"
-        }
-        results.append(result)
-    return results
+    for attempt in range(retries):
+        try:
+            response = requests.get(base_url, params=params, timeout=timeout)
+            feed = feedparser.parse(response.text)
+            results = []
+            for entry in feed.entries:
+                pdf_url = get_arxiv_pdf_url(entry)
+                results.append({
+                    "title": entry.title.replace("\n", " ").strip(),
+                    "authors": [a.name for a in entry.authors],
+                    "abstract": entry.summary.replace("\n", " ").strip(),
+                    "pdf_url": pdf_url,
+                    "published": entry.published,
+                    "source": "arxiv"
+                })
+            return results
+        except Exception as e:
+            print(f"arXiv attempt {attempt+1}/{retries} failed: {e}")
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+    print(f"arXiv search failed after {retries} attempts for '{query}'")
+    return []
+# Search Semantic Scholar for papers related to the topic
 def search_semantic_scholar(query, max_results=5):
     url = "https://api.semanticscholar.org/graph/v1/paper/search"
     params = {
@@ -106,7 +116,7 @@ def search_agent(topic, max_results_per_query=5,display_results=True):
     all_results = []
     for q in queries:
         all_results.extend(search_arxiv(q, max_results_per_query))
-        all_results.extend(search_semantic_scholar(q, max_results_per_query))
+        # all_results.extend(search_semantic_scholar(q, max_results_per_query))
     
     seen = set()
     unique_results = []
@@ -139,3 +149,4 @@ if __name__ == "__main__":
     # user_topic = input("Enter a research topic: ")
     # max_papers = int(input("Enter the maximum number of papers to retrieve per query: "))
     papers = search_agent(user_topic, max_results_per_query=max_papers, display_results=True)
+    print(papers[0])
