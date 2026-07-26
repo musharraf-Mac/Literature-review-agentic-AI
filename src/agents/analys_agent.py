@@ -4,12 +4,15 @@ import requests
 from pypdf import PdfReader
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
-import chromadb
-from chromadb.utils import embedding_functions 
 from search_agent import search_agent
+import time
+import arxiv
+from core.vector_store import collection
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 
 # Download PDF and extract text
-def download_pdf(pdf_url, save_dir="data/papers",filename=None):
+def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):
     if not pdf_url or not str(pdf_url).startswith("http"):
         print(f"Invalid URL: {pdf_url}")
         return None
@@ -61,25 +64,15 @@ def is_relevant(abstract, topic):
     print("Raw response:", repr(response.content))
     return "yes" in response.content.lower().strip()
 
-# Chunk test
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
+# Chunking and storing
 def chunk_text(text, chunk_size=1000, chunk_overlap=200):
     splitter = RecursiveCharacterTextSplitter(chunk_size = chunk_size, chunk_overlap=chunk_overlap)
     return splitter.split_text(text)
-
-
-# DataBase creation
-client = chromadb.PersistentClient(path="../../data/vector_db")
-embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2", device="cuda" if torch.cuda.is_available() else "cpu")
-
-collection = client.get_or_create_collection(name="literature_review", embedding_function=embedding_fn)
 
 def store_chunks(chunks, paper_meta, chunk_id_prefix):
     ids = [f"{chunk_id_prefix}_{i}" for i in range(len(chunks))]
     metadatas = [{"title": paper_meta["title"], "source": paper_meta["source"]} for _ in chunks]
     collection.add(documents=chunks, ids=ids, metadatas=metadatas)
-    
 # Analysis agent
 def analysis_agent(papers, topic):
     stored_count = 0
