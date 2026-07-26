@@ -81,3 +81,4 @@ def retrieval_agent(topic):
         print(f"✓ {len(result['sources'])} sources used")
 
     return qa_pairs
+
