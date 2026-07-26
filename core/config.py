@@ -1,0 +1,13 @@
+import os
+
+def get_secret(key_name):
+    try:
+        import streamlit as st
+        return st.secrets[key_name]
+    except Exception:
+        from dotenv import load_dotenv
+        load_dotenv()
+        return os.getenv(key_name)
+
+GROQ_APIKEY = get_secret("GROQ_API")
+OPENROUTER_APIKEY = get_secret("OPENROUTER_API")
