@@ -1,12 +1,9 @@
-import torch
 import os
 import requests
 from pypdf import PdfReader
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 from .search_agent import search_agent
-import time
-import arxiv
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..',"..")))
 from core.vector_store import collection
