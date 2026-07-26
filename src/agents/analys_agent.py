@@ -8,6 +8,7 @@ from search_agent import search_agent
 import time
 import arxiv
 from core.vector_store import collection
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 # Download PDF and extract text
