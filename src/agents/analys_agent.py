@@ -8,15 +8,10 @@ import chromadb
 from chromadb.utils import embedding_functions 
 from search_agent import search_agent
 
-def get_arxiv_pdf_url(entry): # For getting a proper PDF URL from the arXiv entry
-    # entry.id looks like: http://arxiv.org/abs/2506.01923v1
-    arxiv_id = entry.id.split("/abs/")[-1]
-    return f"https://arxiv.org/pdf/{arxiv_id}.pdf"
-
 # Download PDF and extract text
-def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):
-    if not pdf_url:
-        print("No PDF URL provided.")
+def download_pdf(pdf_url, save_dir="data/papers",filename=None):
+    if not pdf_url or not str(pdf_url).startswith("http"):
+        print(f"Invalid URL: {pdf_url}")
         return None
     os.makedirs(save_dir, exist_ok=True)
     filename = filename or pdf_url.split("/")[-1].replace(".pdf","") + ".pdf"
@@ -87,28 +82,24 @@ def store_chunks(chunks, paper_meta, chunk_id_prefix):
     
 # Analysis agent
 def analysis_agent(papers, topic):
-    stored_count=0
+    stored_count = 0
     for idx, paper in enumerate(papers):
-        if not is_relevant(paper.get("Abstract"), topic):
-            print(f"Paper {idx+1} is not relevant. Skipping.")
-            continue
-        
-        filepath = download_pdf(paper.get("pdf_url"), filename=f"paper_{idx+1}.pdf")
+        filepath = download_pdf(paper.get("pdf_url"), filename=f"paper_{idx}.pdf")
         if not filepath:
-            print(f"Skipped (no pdf): {paper.get('title')}")
+            print(f"✗ Skipped (no PDF): {paper['title']}")
             continue
-        
+
         text = extract_text(filepath)
         if not text:
-            print(f"Skipped (no text): {paper.get('title')}")
+            print(f"✗ Skipped (no extractable text): {paper['title']}")
             continue
-        
+
         chunks = chunk_text(text)
         store_chunks(chunks, paper, chunk_id_prefix=f"paper_{idx}")
-        stored_count +=1
-        print(f"Stored: {paper['title']} ({len(chunks)} chunks)")
-        
-    print(f"\n {stored_count} papers stored in the vector database.")
+        stored_count += 1
+        print(f"✓ Stored: {paper['title']} ({len(chunks)} chunks)")
+
+    print(f"\n✅ {stored_count} papers embedded into vector DB")
 
 # Test the analysis agent
 topic = "cross-generator generalization AI-Generated text detection"
