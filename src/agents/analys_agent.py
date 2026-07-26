@@ -10,10 +10,10 @@ from core.vector_store import collection
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from core.config import GROQ_API
 import tempfile
+import streamlit as st
 
 def get_papers_dir():
-    try:
-        import streamlit as st
+    try:        
         # Running on Streamlit Cloud (or any environment) — use a safe temp dir
         return tempfile.mkdtemp(prefix="papers_")
     except Exception:
@@ -27,7 +27,7 @@ def get_papers_dir():
 SAVE_DIR = get_papers_dir()
 
 # Download PDF and extract text
-def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):
+def download_pdf(pdf_url, save_dir=SAVE_DIR,filename=None):
     if not pdf_url or not str(pdf_url).startswith("http"):
         print(f"Invalid URL: {pdf_url}")
         return None
