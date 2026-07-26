@@ -8,6 +8,11 @@ import chromadb
 from chromadb.utils import embedding_functions 
 from search_agent import search_agent
 
+def get_arxiv_pdf_url(entry): # For getting a proper PDF URL from the arXiv entry
+    # entry.id looks like: http://arxiv.org/abs/2506.01923v1
+    arxiv_id = entry.id.split("/abs/")[-1]
+    return f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+
 # Download PDF and extract text
 def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):
     if not pdf_url:
