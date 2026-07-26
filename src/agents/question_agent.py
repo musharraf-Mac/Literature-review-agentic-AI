@@ -67,3 +67,16 @@ Answer (cite source titles where relevant):"""
 
     return {"question": question, "answer": "Insufficient information found after retries.", "sources": []}
 
+# Orchestrate overall questions
+def retrieval_agent(topic):
+    questions = formulate_questions(topic)
+    print(f"📋 Formulated {len(questions)} questions")
+
+    qa_pairs = []
+    for q in questions:
+        print(f"\n🔎 Answering: {q}")
+        result = answer_question(q)
+        qa_pairs.append(result)
+        print(f"✓ {len(result['sources'])} sources used")
+
+    return qa_pairs
