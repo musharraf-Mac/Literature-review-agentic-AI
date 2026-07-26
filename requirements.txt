@@ -8,4 +8,4 @@ python-dotenv==1.2.2
 requests==2.32.5
 sentence-transformers==5.6.1
 streamlit==1.60.0
-torch==2.10.0+cu130
+torch==2.10.0
