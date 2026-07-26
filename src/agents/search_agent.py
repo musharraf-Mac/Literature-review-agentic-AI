@@ -1,4 +1,3 @@
-# Calling LLM and setup API
 import os
 import langchain_openrouter
 import langchain_groq
@@ -114,10 +113,26 @@ def search_agent(topic, max_results_per_query=5,display_results=True):
     print(f"Generated queries: {queries}")
     
     all_results = []
-    for q in queries:
-        all_results.extend(search_arxiv(q, max_results_per_query))
-        # all_results.extend(search_semantic_scholar(q, max_results_per_query))
+    shortfall_notices = []
     
+    for q in queries:
+        arxiv_results = search_arxiv(q, max_results_per_query)
+        # ss_results = search_semantic_scholar(q, max_results_per_query)
+        # combined = arxiv_results + ss_results
+
+        # if len(combined) < max_results_per_query:
+            # shortfall_notices.append(
+                # f"Only found {len(combined)} papers for query '{q}' (requested {max_results_per_query})."
+           #  )
+
+        # all_results.extend(combined)
+        if len(arxiv_results) < max_results_per_query:
+            shortfall_notices.append(
+                f"Only found {len(arxiv_results)} papers for query '{q}' (requested {max_results_per_query})."
+            )
+        else:
+            print(f"Found {len(arxiv_results)} papers for query '{q}'")
+            all_results.extend(arxiv_results)
     seen = set()
     unique_results = []
     for r in all_results:
@@ -141,12 +156,5 @@ def search_agent(topic, max_results_per_query=5,display_results=True):
             print(f"    Authors: {', '.join(authors) if authors else 'Unknown'}")
             print(f"    Year: {year}")
             print("-" * 60)
-    return unique_results
+    return unique_results, shortfall_notices
 
-if __name__ == "__main__":
-    user_topic = "Tuberculosis detection by AI using chest X-ray images"
-    max_papers = 5
-    # user_topic = input("Enter a research topic: ")
-    # max_papers = int(input("Enter the maximum number of papers to retrieve per query: "))
-    papers = search_agent(user_topic, max_results_per_query=max_papers, display_results=True)
-    print(papers[0])
