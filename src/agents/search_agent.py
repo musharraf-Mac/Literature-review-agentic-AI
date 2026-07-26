@@ -1,4 +1,3 @@
-# Calling LLM and setup API
 import os
 import langchain_openrouter
 import langchain_groq

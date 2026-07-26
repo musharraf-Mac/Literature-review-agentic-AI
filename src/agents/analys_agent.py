@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from search_agent import search_agent
 import time
 import arxiv
+import sys
+sys.path.append("../../")
 from core.vector_store import collection
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
