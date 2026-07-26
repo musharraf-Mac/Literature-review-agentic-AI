@@ -14,7 +14,10 @@ st.caption(f"Level {effort_level} will search up to {effort_level} papers per qu
 
 if st.button("Generate Literature Review") and topic:
     with st.spinner("Searching for papers..."):
-        papers = search_agent(topic, effort_level, display_results=False)
+        papers, shortfalls = search_agent(topic, max_results_per_query=effort_level)
+    if shortfalls:
+        for msg in shortfalls:
+            st.info(f"{msg}")
         st.success(f"Found {len(papers)} papers")
 
     with st.spinner("Downloading, chunking, embedding..."):
