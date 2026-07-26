@@ -8,11 +8,13 @@ st.set_page_config(page_title="Literature Review Agent", layout="wide")
 st.title("Multi-agent Literature Review Agent")
 
 topic = st.text_input("Enter a research topic:")
-max_results_per_query = st.slider("Max results per query:", min_value=1, max_value=10, value=5)
+st.subheader("Adjust parameters:")
+effort_level = st.slider("Higher levels search for more papers per query, improving thoroughness but taking longer.", min_value=2, max_value=30, value=5)
+st.caption(f"Level {effort_level} will search up to {effort_level} papers per query. Higher levels may take longer to process.")
 
 if st.button("Generate Literature Review") and topic:
     with st.spinner("Searching for papers..."):
-        papers = search_agent(topic, max_results_per_query=5, display_results=True)
+        papers = search_agent(topic, effort_level, display_results=False)
         st.success(f"Found {len(papers)} papers")
 
     with st.spinner("Downloading, chunking, embedding..."):
