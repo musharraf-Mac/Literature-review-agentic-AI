@@ -7,9 +7,11 @@ from dotenv import load_dotenv
 import chromadb
 from chromadb.utils import embedding_functions 
 from search_agent import search_agent
+import time
+import arxiv
 
 # Download PDF and extract text
-def download_pdf(pdf_url, save_dir="data/papers",filename=None):
+def download_pdf(pdf_url, save_dir="../../data/papers",filename=None):
     if not pdf_url or not str(pdf_url).startswith("http"):
         print(f"Invalid URL: {pdf_url}")
         return None
