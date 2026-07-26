@@ -95,8 +95,3 @@ def analysis_agent(papers, topic):
         print(f"Stored: {paper['title']} ({len(chunks)} chunks)")
 
     print(f"\n{stored_count} papers embedded into vector DB")
-
-# Test the analysis agent
-topic = "cross-generator generalization AI-Generated text detection"
-papers = search_agent(topic, max_results_per_query=2, display_results=True)
-analysis_agent(papers, topic)
