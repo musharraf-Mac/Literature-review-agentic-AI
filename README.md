@@ -84,7 +84,7 @@ SynthesisAgent → User: final literature review
 
 ## 6. RAG Pipeline
 
-- **Corpus:** papers dynamically retrieved per query from arXiv and Semantic Scholar APIs (not a static pre-collected set) — the corpus is built fresh for whatever topic the user enters.
+- **Corpus:** papers dynamically retrieved per query from arXiv — the corpus is built fresh for whatever topic the user enters.
 - **Chunking:** `RecursiveCharacterTextSplitter`, chunk size 1000 characters, overlap 200.
 - **Embedding model:** `all-MiniLM-L6-v2` (sentence-transformers).
 - **Vector store:** ChromaDB (in-memory client for deployment stability on Streamlit Cloud).
@@ -101,6 +101,7 @@ The UI includes a slider (2–30) controlling how many papers are searched per g
 ## 8. Setup Instructions
 
 ### Local development
+
 ```bash
 git clone https://github.com/musharraf-Mac/Literature-review-agentic-AI
 cd literature-review-agentic-ai
@@ -108,20 +109,25 @@ pip install -r requirements.txt --break-system-packages
 ```
 
 Create a `.env` file in the project root:
+
 ```
 GROQ_API=your_groq_key_here
 OPEN_ROUTER_API=your_openrouter_key_here
 ```
 
 Run:
+
 ```bash
+
 streamlit run app.py
 ```
 
 ### Deployment (Streamlit Community Cloud)
+
 1. Push to `main` on GitHub.
 2. On [share.streamlit.io](https://share.streamlit.io), create a new app pointing to this repo, branch `main`, file `app.py`.
 3. In the app's **Settings → Secrets**, add (TOML format):
+
 ```toml
 GROQ_API = "your_groq_key_here"
 OPEN_ROUTER_API = "your_openrouter_key_here"
