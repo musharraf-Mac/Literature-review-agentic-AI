@@ -1,4 +1,5 @@
-## Summary
+# Summary
+
 <!-- One or two sentences: what does this PR add/change? -->
 
 ## Agent(s) affected
@@ -29,6 +30,7 @@
 <!-- Anything not yet handled, to track honestly for the README -->
 
 ## Checklist
+
 - [ ] No API keys or secrets committed
 - [ ] Code runs without errors from a clean environment
 - [ ] Commit messages follow semantic format (feat:, fix:, docs:, refactor:)
