@@ -5,6 +5,7 @@ An agentic AI application that automates literature review generation for a give
 Built for IT41043 — Intelligent Systems (Agentic AI), Horizon Campus.
 
 **Live demo:** https://literature-review-agentic-ai.streamlit.app
+**Demo video:** https://1drv.ms/v/c/5c44a9fbf69a6e80/IQBMRYoh4dRkTqmOAMReDXM4AbGajyfE5WtYwb19TPUGHBw?e=fr6CsM
 
 ---
 
