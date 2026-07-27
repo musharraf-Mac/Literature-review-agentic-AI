@@ -63,8 +63,7 @@ def extract_text(filepath):
         print(f"Error extracting text from {filepath}: {e}")
         return ""
     
-load_dotenv()
-GROQ_API = os.getenv("GROQ_API")
+
 llm_relevance = ChatGroq(model="openai/gpt-oss-20b", api_key=GROQ_API, temperature=0, max_tokens=1000)
 
 def is_relevant(abstract, topic):
@@ -88,6 +87,7 @@ def store_chunks(chunks, paper_meta, chunk_id_prefix):
     ids = [f"{chunk_id_prefix}_{i}" for i in range(len(chunks))]
     metadatas = [{"title": paper_meta["title"], "source": paper_meta["source"]} for _ in chunks]
     collection.add(documents=chunks, ids=ids, metadatas=metadatas)
+    
 # Analysis agent
 def analysis_agent(papers, topic):
     stored_count = 0
