@@ -133,9 +133,9 @@ OPEN_ROUTER_API = "your_openrouter_key_here"
 
 - **Relevance filtering in the Analysis Agent was simplified/deprioritized** in favor of relying on the Search Agent's topic-targeted queries, due to time constraints — could be reintroduced as a stricter reflection step given more development time.
 - **Vector DB is in-memory and non-persistent** between sessions/restarts (deliberate choice for Streamlit Cloud filesystem stability) — each user query rebuilds the corpus fresh, so results may vary slightly between identical repeated queries depending on API result freshness.
-- **Semantic Scholar's unauthenticated API has rate limits** — heavy use (especially at high "effort levels") may hit throttling; a registered API key mitigates but does not eliminate this.
 - **Deduplication is exact-title-match only** — near-duplicate papers with minor title wording differences are not merged.
 - **Dependent on third-party model availability** — Groq periodically deprecates model versions (encountered during development); model strings may need updating if Groq/OpenRouter retire the models listed above.
+- **AI Model rate limit hit** - I am using free version so, sometime models ratelimit hit, if hits please try again later.
 - **PDF text extraction quality varies** by source formatting; some papers may yield partial or no extractable text and are skipped gracefully.
 
 ---
