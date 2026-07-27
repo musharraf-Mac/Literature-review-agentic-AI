@@ -78,7 +78,7 @@ SynthesisAgent → User: final literature review
 | Relevance classification (Analysis Agent) | `openai/gpt-oss-20b` (Groq) | Fast binary classification over many papers; cost matters more than depth here |
 | Question decomposition (Question Agent) | `openai/gpt-oss-120b` (Groq) | Needs stronger reasoning to produce distinct, well-scoped sub-questions rather than overlapping ones |
 | Retrieval answering (Retrieval Agent) | `openai/gpt-oss-120b` (Groq) | Needs reliable grounding and reasonable tool-calling stability during the ReAct retrieval loop |
-| Final synthesis + critique (Synthesis Agent) | `[YOUR OPENROUTER MODEL, e.g. openai/gpt-4o-mini]` (OpenRouter) | Highest-stakes output — coherent long-form writing and self-critique justify the higher cost/latency of a stronger model |
+| Final synthesis + critique (Synthesis Agent) | `openai/gpt-4o-mini` (OpenRouter) | Highest-stakes output — coherent long-form writing and self-critique justify the higher cost/latency of a stronger model |
 
 ---
 
