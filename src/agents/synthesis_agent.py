@@ -1,13 +1,13 @@
 from langchain_groq import ChatGroq
-from langchain_openrouter import ChatOpenRouter  # or however you imported it earlier
+from langchain_openrouter import ChatOpenRouter 
 import os
 from core.config import OPEN_ROUTER_API
 
-# Stronger model for final writing quality — via OpenRouter as planned
+
 llm_synth = ChatOpenRouter(
     api_key=OPEN_ROUTER_API,
     model="openai/gpt-4o-mini",  
-    temperature=0.3,  # slightly higher than 0 — some writing variety, but still controlled
+    temperature=0.3,  
 )
 
 def synthesize_review(topic, qa_pairs):
