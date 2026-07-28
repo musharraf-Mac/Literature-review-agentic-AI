@@ -17,6 +17,67 @@ Reviewing literature for an active research topic is slow: finding relevant pape
 **Type:** Option B — Research support tool
 **Domain:** Supports ongoing research on TB detection XAI
 
+## 2. Architecture Diagram
+ 
+```
+                          ┌─────────────────┐
+                          │   User Topic     │
+                          │   Input (UI)     │
+                          └────────┬─────────┘
+                                   │
+                                   ▼
+                     ┌─────────────────────────┐
+                     │   Agent 1: Search Agent   │
+                     │  (Tool-use pattern)       │
+                     │  - LLM generates keywords  │
+                     │  - Queries arXiv API        │
+                     │  - Queries Semantic Scholar │
+                     │  - Dedupes results          │
+                     └────────────┬───────────────┘
+                                  │ paper metadata list
+                                  ▼
+                     ┌─────────────────────────────┐
+                     │  Agent 2: Analysis/Embedding  │
+                     │  Agent (Reflection pattern)    │
+                     │  - Downloads PDFs               │
+                     │  - Extracts + chunks text        │
+                     │  - Embeds into Chroma vector DB   │
+                     └────────────┬───────────────────┘
+                                  │ vector DB populated
+                                  ▼
+                     ┌───────────────────────────────┐
+                     │ Agent 3a: Question Formulation  │
+                     │ Agent (Planning/Decomposition)   │
+                     │ - Breaks topic into N sub-        │
+                     │   questions                        │
+                     └────────────┬─────────────────────┘
+                                  │ sub-questions
+                                  ▼
+                     ┌───────────────────────────────┐
+                     │ Agent 3b: Retrieval Agent        │
+                     │ (ReAct pattern)                   │
+                     │ - Retrieves chunks per question    │
+                     │ - Checks sufficiency; retries with  │
+                     │   broader retrieval if insufficient  │
+                     └────────────┬─────────────────────┘
+                                  │ Q&A pairs + sources
+                                  ▼
+                     ┌───────────────────────────────┐
+                     │ Agent 4: Synthesis Agent          │
+                     │ (Orchestrator + Reflection)        │
+                     │ - Composes coherent review draft    │
+                     │ - Self-critiques and refines          │
+                     └────────────┬─────────────────────┘
+                                  │
+                                  ▼
+                     ┌─────────────────────────┐
+                     │  Final Literature Review │
+                     │      (Streamlit UI)       │
+                     └─────────────────────────┘
+```
+ 
+---
+
 ## 3. Agent-to-Agent Communication
 
 Agents exchange structured Python dictionaries/lists (JSON-serializable) at each handoff, orchestrated sequentially from `app.py`:
